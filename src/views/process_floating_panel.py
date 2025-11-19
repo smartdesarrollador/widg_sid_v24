@@ -510,25 +510,6 @@ class ProcessFloatingPanel(QWidget):
                     item_type = step.item_type  # Get item type from ProcessStep
 
                     if item_type == "URL":
-                        # Info button - show item details
-                        info_button = QPushButton("ℹ️")
-                        info_button.setFixedSize(30, 30)
-                        info_button.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-                        info_button.setStyleSheet("""
-                            QPushButton {
-                                background-color: transparent;
-                                border: none;
-                                font-size: 14pt;
-                            }
-                            QPushButton:hover {
-                                background-color: #3e3e42;
-                                border-radius: 3px;
-                            }
-                        """)
-                        info_button.setToolTip("Ver detalles del item")
-                        info_button.clicked.connect(lambda checked, i=item: self.on_info_button_clicked(i))
-                        item_row_layout.addWidget(info_button)
-
                         # Open in embedded browser button
                         embedded_url_button = QPushButton("🌐")
                         embedded_url_button.setFixedSize(35, 35)
@@ -951,29 +932,6 @@ class ProcessFloatingPanel(QWidget):
                 logger.error(f"Error deleting process panel from database: {e}", exc_info=True)
 
     # ========== ACTION BUTTON HANDLERS ==========
-
-    def on_info_button_clicked(self, item: Item):
-        """Handle info button click - show item details dialog"""
-        try:
-            from views.dialogs.item_details_dialog import ItemDetailsDialog
-
-            dialog = ItemDetailsDialog(item, config_manager=self.config_manager, parent=self)
-            dialog.item_state_changed.connect(self.on_item_state_changed)
-            dialog.exec()
-            logger.info(f"Showing details for item: {item.label}")
-        except Exception as e:
-            logger.error(f"Error showing item details: {e}", exc_info=True)
-            QMessageBox.warning(
-                self,
-                "Error",
-                f"No se pudo mostrar los detalles del item:\n{str(e)}"
-            )
-
-    def on_item_state_changed(self, item_id: int):
-        """Handle item state change (favorite/archived) - reload process"""
-        if self.current_process:
-            logger.info(f"Item {item_id} state changed, reloading process")
-            self.load_process(self.current_process)
 
     def on_embedded_url_button_clicked(self, url: str):
         """Handle embedded browser button click - open URL in embedded browser"""

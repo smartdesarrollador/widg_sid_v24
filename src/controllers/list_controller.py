@@ -113,6 +113,8 @@ class ListController(QObject):
         """
         Crea una nueva lista a partir de items existentes (por sus IDs)
 
+        Automáticamente agrega los tags ["lista", "nombre_de_la_lista"] a cada item
+
         Args:
             list_name: Nombre de la lista
             category_id: ID de la categoría destino
@@ -122,12 +124,33 @@ class ListController(QObject):
             Tuple (success, message, new_item_ids)
         """
         try:
+            # Crear tags automáticos para la lista: ["lista", "nombre_de_la_lista"]
+            auto_tags = ["lista"]
+            if list_name:
+                auto_tags.append(list_name)
+
             # Obtener datos de los items existentes
             items_data = []
             for item_id in item_ids:
                 # Obtener item de la BD
                 item = self.db.get_item(item_id)
                 if item:
+                    # Obtener tags existentes del item
+                    existing_tags = item.get('tags', [])
+                    if isinstance(existing_tags, str):
+                        # Parsear si viene como string
+                        try:
+                            import json
+                            existing_tags = json.loads(existing_tags)
+                        except:
+                            existing_tags = [tag.strip() for tag in existing_tags.split(',') if tag.strip()]
+
+                    # Combinar tags automáticos con tags existentes (sin duplicados)
+                    combined_tags = auto_tags.copy()
+                    for tag in existing_tags:
+                        if tag and tag not in combined_tags:
+                            combined_tags.append(tag)
+
                     # Crear dict con los datos necesarios para la lista
                     item_data = {
                         'label': item.get('label', ''),
@@ -135,7 +158,8 @@ class ListController(QObject):
                         'type': item.get('type', 'text'),
                         'icon': item.get('icon'),
                         'description': item.get('description'),
-                        'is_sensitive': item.get('is_sensitive', False)
+                        'is_sensitive': item.get('is_sensitive', False),
+                        'tags': combined_tags  # Agregar tags automáticos + existentes
                     }
                     items_data.append(item_data)
                 else:

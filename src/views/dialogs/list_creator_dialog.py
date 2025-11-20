@@ -547,19 +547,41 @@ class ListCreatorDialog(QDialog):
         """
         Obtiene los datos de todos los pasos y les agrega los tags comunes
 
+        Automáticamente agrega los tags ["lista", "nombre_de_la_lista"] a cada item
+
         Returns:
             Lista de diccionarios con datos de cada paso
         """
-        # Obtener tags comunes
-        common_tags = self.common_tags_input.text().strip()
+        # Obtener tags comunes del input
+        common_tags_str = self.common_tags_input.text().strip()
+
+        # Convertir tags comunes de string a lista
+        common_tags_list = []
+        if common_tags_str:
+            # Parsear tags separados por coma
+            common_tags_list = [tag.strip() for tag in common_tags_str.split(',') if tag.strip()]
+
+        # Obtener nombre de la lista para agregar como tag
+        list_name = self.name_input.text().strip()
+
+        # Crear lista de tags automáticos: ["lista", "nombre_de_la_lista"]
+        auto_tags = ["lista"]
+        if list_name:
+            auto_tags.append(list_name)
+
+        # Combinar tags automáticos con tags comunes (sin duplicados)
+        final_tags = auto_tags.copy()
+        for tag in common_tags_list:
+            if tag not in final_tags:
+                final_tags.append(tag)
 
         steps_data = []
         for widget in self.step_widgets:
             data = widget.get_step_data()
             # Solo incluir pasos que tengan al menos label
             if data['label']:
-                # Agregar tags comunes a este paso
-                data['tags'] = common_tags
+                # Agregar lista de tags a este paso (como lista, no string)
+                data['tags'] = final_tags.copy()
                 steps_data.append(data)
         return steps_data
 

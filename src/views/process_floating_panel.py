@@ -763,16 +763,18 @@ class ProcessFloatingPanel(QWidget):
             self.normal_height = self.height()
             self.normal_width = self.width()
 
-            # Minimize to header only
+            # Minimize to header only - hide all content widgets
             self.content_widget.hide()
             self.action_bar.hide()
+            self.display_options_widget.hide()
             self.setFixedHeight(60)
             self.minimize_button.setText("□")
             self.minimize_button.setToolTip("Restaurar")
         else:
-            # Restore size
+            # Restore size - show all content widgets
             self.content_widget.show()
             self.action_bar.show()
+            self.display_options_widget.show()
             # Remove ALL height constraints first
             self.setMinimumHeight(0)  # Remove minimum temporarily
             self.setMaximumHeight(16777215)  # Qt's QWIDGETSIZE_MAX

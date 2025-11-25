@@ -297,14 +297,14 @@ class ProcessesFloatingPanel(QWidget):
 
     def create_action_bar(self, parent_layout):
         """Create action bar with filters, execute all, and state combo"""
-        action_widget = QWidget()
-        action_widget.setStyleSheet("""
+        self.action_widget = QWidget()
+        self.action_widget.setStyleSheet("""
             QWidget {
                 background-color: #2d2d2d;
                 border-bottom: 1px solid #3d3d3d;
             }
         """)
-        action_layout = QHBoxLayout(action_widget)
+        action_layout = QHBoxLayout(self.action_widget)
         action_layout.setContentsMargins(8, 5, 8, 5)
         action_layout.setSpacing(8)
 
@@ -409,18 +409,18 @@ class ProcessesFloatingPanel(QWidget):
         self.state_filter_combo.currentIndexChanged.connect(self.on_state_filter_changed)
         action_layout.addWidget(self.state_filter_combo)
 
-        parent_layout.addWidget(action_widget)
+        parent_layout.addWidget(self.action_widget)
 
     def create_search_bar(self, parent_layout):
         """Create search bar"""
-        search_widget = QWidget()
-        search_widget.setStyleSheet("""
+        self.search_widget = QWidget()
+        self.search_widget.setStyleSheet("""
             QWidget {
                 background-color: #2d2d2d;
                 border-bottom: 1px solid #3d3d3d;
             }
         """)
-        search_layout = QVBoxLayout(search_widget)
+        search_layout = QVBoxLayout(self.search_widget)
         search_layout.setContentsMargins(8, 5, 8, 5)
         search_layout.setSpacing(0)
 
@@ -430,7 +430,7 @@ class ProcessesFloatingPanel(QWidget):
         self.search_bar.search_changed.connect(self.on_search_triggered)
         search_layout.addWidget(self.search_bar)
 
-        parent_layout.addWidget(search_widget)
+        parent_layout.addWidget(self.search_widget)
 
     def create_processes_list(self, parent_layout):
         """Create scrollable processes list"""
@@ -796,8 +796,8 @@ class ProcessesFloatingPanel(QWidget):
 
             # Hide content widgets
             self.scroll_area.hide()
-            self.search_bar.parent().hide()
-            self.filters_button.parent().hide()
+            self.search_widget.hide()
+            self.action_widget.hide()
 
             # Hide display options widget if it exists
             if hasattr(self, 'display_options_widget'):
@@ -816,8 +816,8 @@ class ProcessesFloatingPanel(QWidget):
         else:
             # Restore content widgets
             self.scroll_area.show()
-            self.search_bar.parent().show()
-            self.filters_button.parent().show()
+            self.search_widget.show()
+            self.action_widget.show()
 
             # Restore display options widget if it exists
             if hasattr(self, 'display_options_widget'):

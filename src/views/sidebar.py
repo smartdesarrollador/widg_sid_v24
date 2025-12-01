@@ -96,6 +96,9 @@ class Sidebar(QWidget):
     # Signal emitted when projects button is clicked
     projects_clicked = pyqtSignal()
 
+    # Signal emitted when close app button is clicked from menu
+    close_app_requested = pyqtSignal()
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self.category_buttons = {}
@@ -360,10 +363,10 @@ class Sidebar(QWidget):
         self.quick_create_button.clicked.connect(self.on_quick_create_clicked)
         main_layout.addWidget(self.quick_create_button)
 
-        # Quick Access button (⚡)
-        self.quick_access_button = QPushButton("⚡")
+        # Menu button (☰)
+        self.quick_access_button = QPushButton("☰")
         self.quick_access_button.setFixedSize(70, 40)
-        self.quick_access_button.setToolTip("Acceso Rápido")
+        self.quick_access_button.setToolTip("Menu")
         self.quick_access_button.setCursor(Qt.CursorShape.PointingHandCursor)
         self.quick_access_button.setStyleSheet(f"""
             QPushButton {{
@@ -825,6 +828,7 @@ class Sidebar(QWidget):
                 self.quick_access_panel.web_static_create_clicked.connect(lambda: self.web_static_create_clicked.emit())
                 self.quick_access_panel.image_gallery_clicked.connect(lambda: self.image_gallery_clicked.emit())
                 self.quick_access_panel.projects_clicked.connect(lambda: self.projects_clicked.emit())
+                self.quick_access_panel.close_app_clicked.connect(lambda: self.close_app_requested.emit())
 
         # Toggle visibility
         if self.quick_access_panel.isVisible():

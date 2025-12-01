@@ -492,5 +492,5 @@ class ProjectEntitySelector(QDialog):
         QMessageBox.information(
             self,
             "Crear Proceso",
-            "Para crear un proceso, usa el botón 'Crear Proceso' del panel de Acceso Rápido"
+            "Para crear un proceso, usa el botón 'Crear Proceso' del Menu"
         )

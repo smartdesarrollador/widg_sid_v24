@@ -162,44 +162,44 @@ class MainWindow(QMainWindow):
         main_layout.setContentsMargins(0, 0, 0, 0)
         main_layout.setSpacing(0)
 
-        # Title bar with minimize and close buttons
-        title_bar = QWidget()
-        title_bar.setFixedHeight(30)
-        title_bar.setStyleSheet("""
-            QWidget {
-                background-color: #1e1e1e;
-                border-bottom: 1px solid #007acc;
-            }
-        """)
-        title_bar_layout = QHBoxLayout(title_bar)
-        title_bar_layout.setContentsMargins(5, 0, 5, 0)
-        title_bar_layout.setSpacing(5)
-
-        # Spacer
-        title_bar_layout.addStretch()
-
-        # Close button
-        self.close_button = QPushButton("✕")
-        self.close_button.setFixedSize(25, 25)
-        self.close_button.setStyleSheet("""
-            QPushButton {
-                background-color: #2d2d2d;
-                color: #cccccc;
-                border: 1px solid #3d3d3d;
-                border-radius: 3px;
-                font-size: 12pt;
-                font-weight: bold;
-            }
-            QPushButton:hover {
-                background-color: #c42b1c;
-                border: 1px solid #e81123;
-                color: #ffffff;
-            }
-        """)
-        self.close_button.clicked.connect(self.close_window)
-        title_bar_layout.addWidget(self.close_button)
-
-        main_layout.addWidget(title_bar)
+        # Title bar removed - close button now in Menu panel
+        # title_bar = QWidget()
+        # title_bar.setFixedHeight(30)
+        # title_bar.setStyleSheet("""
+        #     QWidget {
+        #         background-color: #1e1e1e;
+        #         border-bottom: 1px solid #007acc;
+        #     }
+        # """)
+        # title_bar_layout = QHBoxLayout(title_bar)
+        # title_bar_layout.setContentsMargins(5, 0, 5, 0)
+        # title_bar_layout.setSpacing(5)
+        #
+        # # Spacer
+        # title_bar_layout.addStretch()
+        #
+        # # Close button
+        # self.close_button = QPushButton("✕")
+        # self.close_button.setFixedSize(25, 25)
+        # self.close_button.setStyleSheet("""
+        #     QPushButton {
+        #         background-color: #2d2d2d;
+        #         color: #cccccc;
+        #         border: 1px solid #3d3d3d;
+        #         border-radius: 3px;
+        #         font-size: 12pt;
+        #         font-weight: bold;
+        #     }
+        #     QPushButton:hover {
+        #         background-color: #c42b1c;
+        #         border: 1px solid #e81123;
+        #         color: #ffffff;
+        #     }
+        # """)
+        # self.close_button.clicked.connect(self.close_window)
+        # title_bar_layout.addWidget(self.close_button)
+        #
+        # main_layout.addWidget(title_bar)
 
         # Create sidebar only (no embedded panel)
         self.sidebar = Sidebar()
@@ -229,6 +229,7 @@ class MainWindow(QMainWindow):
         self.sidebar.create_process_clicked.connect(self.on_create_process_clicked)
         self.sidebar.view_processes_clicked.connect(self.on_view_processes_clicked)
         self.sidebar.process_clicked.connect(self.on_process_clicked)
+        self.sidebar.close_app_requested.connect(self.close_window)
         main_layout.addWidget(self.sidebar)
 
     def load_categories(self, categories):

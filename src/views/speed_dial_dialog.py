@@ -44,7 +44,7 @@ class SpeedDialDialog(QDialog):
 
     def _setup_ui(self):
         """Configura la interfaz del dialog."""
-        title = "Editar Acceso Rápido" if self.is_edit_mode else "Nuevo Acceso Rápido"
+        title = "Editar Item de Menu" if self.is_edit_mode else "Nuevo Item de Menu"
         self.setWindowTitle(title)
         self.setWindowFlags(
             Qt.WindowType.Dialog |

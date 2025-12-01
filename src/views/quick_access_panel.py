@@ -40,6 +40,7 @@ class QuickAccessPanel(QWidget):
     web_static_create_clicked = pyqtSignal()
     image_gallery_clicked = pyqtSignal()  # NEW: Image Gallery
     projects_clicked = pyqtSignal()  # NEW: Projects Manager
+    close_app_clicked = pyqtSignal()  # NEW: Close application
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -48,7 +49,7 @@ class QuickAccessPanel(QWidget):
     def init_ui(self):
         """Initialize UI"""
         # Window properties
-        self.setWindowTitle("Acceso Rápido")
+        self.setWindowTitle("Menu")
         self.setWindowFlags(
             Qt.WindowType.Window |
             Qt.WindowType.WindowStaysOnTopHint |
@@ -56,7 +57,7 @@ class QuickAccessPanel(QWidget):
         )
 
         # Fixed size for panel (adjusted for vertical layout)
-        self.setFixedSize(220, 620)
+        self.setFixedSize(220, 750)
 
         # Window opacity
         self.setWindowOpacity(0.95)
@@ -78,11 +79,12 @@ class QuickAccessPanel(QWidget):
         main_layout.setContentsMargins(10, 10, 10, 10)
         main_layout.setSpacing(8)
 
-        # Header with title and close button
+        # Header with title and small close button
         header_layout = QHBoxLayout()
         header_layout.setSpacing(5)
+        header_layout.setContentsMargins(0, 0, 0, 0)
 
-        header = QLabel("⚡ Acceso Rápido")
+        header = QLabel("☰ Menu")
         header.setStyleSheet("""
             QLabel {
                 color: #ffffff;
@@ -94,11 +96,11 @@ class QuickAccessPanel(QWidget):
         """)
         header_layout.addWidget(header)
 
-        # Close button (small, top right)
-        close_btn = QPushButton("✕")
-        close_btn.setFixedSize(25, 25)
-        close_btn.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-        close_btn.setStyleSheet("""
+        # Small close button (only closes the Menu panel)
+        small_close_btn = QPushButton("✕")
+        small_close_btn.setFixedSize(25, 25)
+        small_close_btn.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        small_close_btn.setStyleSheet("""
             QPushButton {
                 background-color: #2d2d2d;
                 color: #ffffff;
@@ -112,8 +114,8 @@ class QuickAccessPanel(QWidget):
                 border-color: #e4475b;
             }
         """)
-        close_btn.clicked.connect(self.hide)
-        header_layout.addWidget(close_btn)
+        small_close_btn.clicked.connect(self.hide)
+        header_layout.addWidget(small_close_btn)
 
         main_layout.addLayout(header_layout)
 
@@ -142,6 +144,34 @@ class QuickAccessPanel(QWidget):
         for icon, label, handler in buttons_config:
             row_widget = self.create_action_row(icon, label, handler)
             main_layout.addWidget(row_widget)
+
+        # Add spacer to push close button to bottom
+        main_layout.addStretch()
+
+        # Close button at the bottom
+        close_btn = QPushButton("✕  Cerrar")
+        close_btn.setFixedHeight(40)
+        close_btn.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        close_btn.setStyleSheet("""
+            QPushButton {
+                background-color: #3d3d3d;
+                color: #ffffff;
+                border: 1px solid #4d4d4d;
+                border-radius: 4px;
+                font-size: 10pt;
+                font-weight: bold;
+                text-align: center;
+            }
+            QPushButton:hover {
+                background-color: #e4475b;
+                border-color: #e4475b;
+            }
+            QPushButton:pressed {
+                background-color: #c03545;
+            }
+        """)
+        close_btn.clicked.connect(self.on_close_clicked)
+        main_layout.addWidget(close_btn)
 
     def create_action_row(self, icon: str, label: str, handler):
         """Create a button with icon and text"""
@@ -264,6 +294,10 @@ class QuickAccessPanel(QWidget):
         """Handle projects button click"""
         self.projects_clicked.emit()
         self.hide()
+
+    def on_close_clicked(self):
+        """Handle close button click - closes the application"""
+        self.close_app_clicked.emit()
 
     def position_near_button(self, button_widget):
         """Position panel near the quick access button"""
